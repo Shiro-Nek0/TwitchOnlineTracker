@@ -10,6 +10,7 @@ Get a Client ID. See Step 1 of the [Twitch API Introduction](https://dev.twitch.
 const { TwitchOnlineTracker } = require('twitchonlinetracker')
 const tracker = new TwitchOnlineTracker({
   client_id: "your twitch app client id", // used for api requests
+  oauth: "your twitch app oauth", // used for api requests
   track: ['channel1', 'channel2'], // all the channels you want to track
   pollInterval: 30, // how often in between polls in seconds. default 30
   debug: true, // whether to debug to console
@@ -34,6 +35,7 @@ tracker.on('error', error => console.error)
 Create a new `TwitchOnlineTracker` instance. It takes a TwitchOnlineTrackerOptions interface:
 
 - `client_id` *string* **required** Your Twitch app's client id
+- `oauth` *string* **required** Your Twitch app's OAuth
 - `track` *string[]* An array of the channels you wish to track on startup
 - `pollInterval` *number* The amount of time in seconds between polls
 - `debug` *boolean* If true, output debug information to console

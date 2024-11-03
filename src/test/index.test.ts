@@ -7,12 +7,13 @@ import { TwitchOnlineTracker } from '../index'
 import { streams } from './twitchApi'
 import { StreamData, StreamRequestData } from '../interfaces';
 
-dotenv.config()
+dotenv.config({ path: ".env.EXAMPLE" });
 
 const tracker = new TwitchOnlineTracker({
     'debug': false,
     'pollInterval': 5,
     'client_id': process.env.TEST_CLIENT_ID || null,
+    'oauth': process.env.TEST_OAUTH || null,
     'track': process.env.TEST_STREAMS.split(',') || []
 })
 

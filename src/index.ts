@@ -41,7 +41,9 @@ export class TwitchOnlineTracker extends EventEmitter {
     if (this.options.client_id === undefined || typeof this.options.client_id !== 'string') {
       throw new Error('`client_id` must be set and a string for TwitchOnlineTracker to work.')
     }
-
+    if (this.options.oauth === undefined || typeof this.options.oauth !== 'string') {
+      throw new Error('`oauth` must be set and a string for TwitchOnlineTracker to work.')
+    }
     if (this.options.debug === undefined) {
       this.options.debug = false
     }
@@ -83,7 +85,8 @@ export class TwitchOnlineTracker extends EventEmitter {
       this.log(`making a request: ${twitchApiBase}${endpoint}`)
       const response = await axios(twitchApiBase + endpoint, {
         headers: {
-          'Client-ID': this.options.client_id
+          'Client-ID': this.options.client_id,
+          'Authorization': `Bearer ${this.options.oauth}`,
         }
       })
       let rv = {}
@@ -98,7 +101,7 @@ export class TwitchOnlineTracker extends EventEmitter {
 
   /**
    * Make a /users Twitch API request.
-   * 
+   *
    * Either `id` or `login` must be used.
    *
    * @param {UsersApiEndpointOptions} params The API parameters.
@@ -156,7 +159,7 @@ export class TwitchOnlineTracker extends EventEmitter {
       return await this.api(`streams?${paramString}`)
     } catch (e) {
       throw new Error(e)
-    }      
+    }
   }
 
   /**
@@ -219,14 +222,14 @@ export class TwitchOnlineTracker extends EventEmitter {
       if (this.tracked.size) {
         const _streamDataJson = await this.streams({user_login: Array.from(this.tracked)})
         const streamRequestData: StreamRequestData = _streamDataJson
-        
+
         const started = streamRequestData.data
           .filter((current) => {
               return this._cachedStreamData.filter((other) => {
                 return other.user_name === current.user_name
               }).length == 0;
             })
-        
+
         const stopped = this._cachedStreamData
           .filter((current) => {
               return streamRequestData.data.filter((other) => {
